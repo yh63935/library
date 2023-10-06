@@ -23,7 +23,17 @@ function addBookToLibrary() {
     myLibrary.push(newBook);
 }
 
-function setHeader()
+function setTableHeader() {
+    const dummyBook = new Book("", "", "", "", "");
+    for(let key in dummyBook) {
+        const headerEl = document.createElement('th');
+        headerEl.innerText = key;
+        bookTable.append(headerEl);
+    }
+}
+
+
+setTableHeader();
 
 // Display each book in the table
 function displayBook() {
