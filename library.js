@@ -32,6 +32,13 @@ function setTableHeader() {
     }
 }
 
+function clearTable() {
+    const tableBody = document.querySelector('tbody');
+    tableBody.innerHTML = "";
+}
+
+const clearBtn = document.querySelector('.clear');
+clearBtn.addEventListener('click', clearTable);
 
 setTableHeader();
 
