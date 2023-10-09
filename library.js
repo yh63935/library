@@ -2,24 +2,40 @@ let myLibrary = [];
 const bookTable = document.querySelector('table');
 const dialog = document.querySelector('dialog');
 const tableBody = document.querySelector('tbody');
+let allNameInput = Array.from(document.querySelectorAll('input[name]'));
+let allNames = [];
+for (let i=0; i<allNameInput.length; i++) {
+    allNames.push(allNameInput[i].getAttribute('name'))
+}
 
 function Book(arr) {
-    this.author = arr[0].value;
-    this.title = arr[1].value;
-    this.pages = arr[2].value;
-    this.read = arr[3].value;
-    this.rating = arr[4].value;
+    for(let i =0; i<arr.length;i++) {
+        this[allNames[i]] = arr[i].value;
+    }
+    this.readCount = 0;
+    this.hasRead = false;
+
 }
+
+Book.prototype.toggleRead = function() {
+    if (this.readCount === 0) {
+        this.readCount = 1;
+        this.hasRead = true;
+    } else {
+        this.readCount = 0;
+        this.hasRead = false;
+    }
+ };
+ 
 
 function addBookToLibrary() {
     const submit = document.querySelector('input[type="submit"]');
     submit.addEventListener('click',(e)=> {
-        changed = true;
         e.preventDefault();
-        let allInputs = Array.from(document.querySelectorAll('input'));
+        let allInputs = Array.from(document.querySelectorAll('input:not([type=submit])'));
         const newBook = new Book(allInputs);
         myLibrary.push(newBook);
-
+        clearInputs();
         displayBook();
     })
 }
@@ -37,13 +53,15 @@ function setTableHeader() {
     tableHeader.appendChild(headerRow);
 }
 
-function clearTable() {
+
+
+function clearLibrary() {
     myLibrary = [];
     tableBody.innerHTML = "";
 }
 
 const clearBtn = document.querySelector('.clear');
-clearBtn.addEventListener('click', clearTable);
+clearBtn.addEventListener('click', clearLibrary);
 
 const newBook = document.querySelector('.new-book')
 
@@ -57,20 +75,48 @@ closeForm.addEventListener('click', () => {
     dialog.close();
 })
 
-// When newBookk is clicked, form should pop up to take in details
-// Things to think about, do you want to create form in HTML or create when writing JS?
 
 setTableHeader();
 
 // Display each book in the table
 function displayBook() {
-    for(let book of myLibrary) {
+    tableBody.innerHTML = "";
+    for(let [key,book] of Object.entries(myLibrary)) {
         let bookRow = bookTable.insertRow();
-        for (let prop in book) {
+
+        const removeButton = document.createElement('button');
+        removeButton.innerText = 'Remove book'
+        bookRow.insertCell().appendChild(removeButton);
+
+        const readButton = document.createElement('button');
+        readButton.innerText = 'Read'
+        bookRow.insertCell().appendChild(readButton);
+        readButton.dataset.index = key;
+        readButton.addEventListener('click', (e) => {
+            myLibrary[e.target.dataset.index].toggleRead();
+            displayBook();
+         });
+         
+
+
+        removeButton.dataset.index = key;
+        removeButton.addEventListener('click', (e)=> {
+            const index = parseInt(e.target.dataset.index);
+            myLibrary.splice(index, 1)
+            tableBody.removeChild(bookRow)
+        })
+        for (let name of allNames) {
             let bookData = bookRow.insertCell();
-            bookData.append(book[prop]);
+            bookData.append(book[name]);
             tableBody.appendChild(bookRow);
         }
+
     }
 }
+
+function clearInputs() {
+    for(let i=0; i<allNameInput.length; i++) {
+        allNameInput[i].value = "";
+    }
+} 
 addBookToLibrary();
