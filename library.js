@@ -16,19 +16,6 @@ function Book(arr) {
     this.hasRead = false;
 
 }
-// Book.prototype.toggleRead = function(event) {
-//     if (this.readCount===0) {
-//         event.target.readCount=1;
-//         event.target.hasRead=true;
-//     }
-//     else {
-//         event.target.readCount=0;
-//         event.target.hasRead=false;
-//     }
-//     myLibrary[event.target.dataset.index].read = event.target.hasRead;
-// }
-
-
 
 Book.prototype.toggleRead = function() {
     if (this.readCount === 0) {
@@ -48,9 +35,8 @@ function addBookToLibrary() {
         let allInputs = Array.from(document.querySelectorAll('input:not([type=submit])'));
         const newBook = new Book(allInputs);
         myLibrary.push(newBook);
-
-        displayBook();
         clearInputs();
+        displayBook();
     })
 }
 
@@ -119,10 +105,9 @@ function displayBook() {
             myLibrary.splice(index, 1)
             tableBody.removeChild(bookRow)
         })
-        for (let name of allNames) {
-            console.log(name)
+        for (let prop in book) {
             let bookData = bookRow.insertCell();
-            bookData.append(book[name]);
+            bookData.append(book[prop]);
             tableBody.appendChild(bookRow);
         }
 
