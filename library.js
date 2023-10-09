@@ -105,9 +105,9 @@ function displayBook() {
             myLibrary.splice(index, 1)
             tableBody.removeChild(bookRow)
         })
-        for (let prop in book) {
+        for (let name of allNames) {
             let bookData = bookRow.insertCell();
-            bookData.append(book[prop]);
+            bookData.append(book[name]);
             tableBody.appendChild(bookRow);
         }
 
