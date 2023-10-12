@@ -16,15 +16,20 @@
             <h3>Book information</h3>
             <p>Add your book information below</p>
             <label for="title">Title</label>
-            <input id = "title" name="title" type="text">
+            <input id = "title" name="title" type="text" required/>
+            <p class="error"></p>
             <label for="author">Author</label>
-            <input id="author" name="author" type="text">
+            <input id="author" name="author" type="text"  required/>
+            <p class="error"></p>
             <label for="pages">Number of pages</label>
             <input id="pages" name="pages" type="number">
+            <p class="error"></p>
             <label for="read"> Finished reading?</label>
             <input id="read" name="read" type="text">
+            <p class="error"></p>
             <label for="rating">Rating</label>
             <input id = "rating" name="rating" type="number">
+            <p class="error"></p>
             <input type="submit" value="submit">
         </form>
         <button class="close-form">Close</button>
