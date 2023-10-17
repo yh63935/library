@@ -2,12 +2,14 @@ let myLibrary = [];
 const bookTable = document.querySelector('table');
 const dialog = document.querySelector('dialog');
 const tableBody = document.querySelector('tbody');
-// Is it bad to be using allNameInput to get the names and populate the table? Is there a better way to do this
-// or make the variable private but still reuse
-let allNameInput = Array.from(document.querySelectorAll('input[name]'));
+const allNameInput = Array.from(document.querySelectorAll('input[name]')); // Get all inputs with any name attribute
 let allNames = [];
-for (let i=0; i<allNameInput.length; i++) {
-    allNames.push(allNameInput[i].getAttribute('name'))
+allNames = allNameInput.map(elem=>elem.getAttribute('name'))
+
+function getBookProperties() {
+
+    const uniqueNames = allNames.filter((elem, index, array)=> array.indexOf(elem)===index)
+    return uniqueNames;
 }
 
 setTableHeader();
@@ -39,25 +41,36 @@ function addBookToLibrary() {
 
     submit.addEventListener('click', (e)=> {
         e.preventDefault();
-        if (form.checkValidity()) {
-            const newBook = new Book(allNameInput);
-            myLibrary.push(newBook);
-            clearInputs();
-            displayBook();
+        let validInput = true;
+        if(!form.checkValidity()) {
+            validInput = false;
         }
-        else { 
             for (let [key,input] of Object.entries(allNameInput)) {
                 errorMessage[key].innerText = input.validationMessage;
+                if (form.checkValidity()) {
+                    if ((input.getAttribute('name') === 'author' || input.getAttribute('name') === 'title') && !isNaN(parseInt(input.value))) {
+                        errorMessage[key].innerText += 'Please enter a string'; 
+                        validInput = false;   
+                    }
+                    if (input.value !=="" && input.getAttribute('name') === 'read' && input.value.toLowerCase()!=='yes' && input.value.toLowerCase()!=='no') {
+                        errorMessage[key].innerText = 'Please enter "yes" or "no"';
+                        validInput = false;
+                    }           
+                }
             }
+            if (validInput) {
+                const newBook = new Book(allNameInput);
+                myLibrary.push(newBook);
+                clearInputs();
+                displayBook();
         }
-    
     })
 }
 
 function setTableHeader() {
     const tableHeader = document.querySelector('theader')
     const headerRow = document.createElement('tr');
-    for(let name of allNames) {
+    for(let name of getBookProperties()) {
         const headerEl = document.createElement('th');
         headerEl.innerText = name;
         headerRow.appendChild(headerEl)
@@ -65,36 +78,6 @@ function setTableHeader() {
     tableHeader.appendChild(headerRow);
 }
 
-function formValidation() {
-        
-        //get all the input values with the name attribute
-        // loop through the properties of the input array
-        //if the property is title, author, it should be type of string
-            //error message
-        // const submit = document.querySelector('input[type="submit"]');
-        // const errorMessage = Array.from(document.querySelectorAll('.error'))
-        // submit.addEventListener('click', ()=> {
-        //     for (let [key,input] of Object.entries(allNameInput)) {
-        //         if ((input.getAttribute('name') === 'author' || input.getAttribute('name') === 'title') && !isNaN(parseInt(input.value)))  {
-        //                 errorMessage[key].innerText = 'Please enter a string';
-        //                 console.log('Please enter a string')
-    
-        //         }
-        //         if ((input.getAttribute('name') === 'pages' || input.getAttribute('name') === 'rating') && isNaN(parseInt(input.value))) {
-        //             errorMessage[key].innerText = 'Please enter a number';
-        //             console.log('Please enter a number')
-        //             console.log(isNaN(parseInt(input.value)))
-        //         }
-        //         if (input.getAttribute('name') === 'read' && input.value.toLowerCase()!=='yes' && input.value.toLowerCase()!=='no') {
-        //             errorMessage[key].innerText = 'Please enter "yes" or "no"';
-        //         }
-        //     }
-        // })
-        // if the name is pages or rating, it should be type of num
-        // if the name is read, it should be boolean? or yes/no
-        // add code inside submit event listener, should grab input values when submit is pressed
-}
-formValidation()
 function clearLibrary() {
     myLibrary = [];
     tableBody.innerHTML = "";
