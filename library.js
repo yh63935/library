@@ -14,22 +14,22 @@ function getBookProperties() {
 
 setTableHeader();
 
-
+// Construct new book instances
 function Book(arr) {
     for(let i =0; i<arr.length;i++) {
-        this[allNames[i]] = arr[i].value;
+        this[allNames[i]] = arr[i].value.toLowerCase();
     }
-    this.readCount = 0;
     this.hasRead = false;
 }
 
+// Set book to read or not read
 Book.prototype.toggleRead = function() {
-    if (this.readCount === 0) {
-        this.readCount = 1;
+    if (this.hasRead === false) {
         this.hasRead = true;
+        this.read = "yes"
     } else {
-        this.readCount = 0;
         this.hasRead = false;
+        this.read= "no";
     }
  };
  
