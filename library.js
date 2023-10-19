@@ -1,5 +1,30 @@
 // Initialize the library and DOM elements
-let myLibrary = [];
+const myLibrary = (function() {
+    // Private data
+    let libraryBooks = [];
+
+    function getLibraryBooks() {
+        return libraryBooks;
+    }
+
+    function addBook(book) {
+        libraryBooks.push(book);
+    }
+
+    function removeBook(ind) {
+        libraryBooks.splice(ind,1)
+    }
+
+    function clearLibrary() {
+        libraryBooks = [];
+    }
+
+    return {
+        getLibraryBooks, addBook, removeBook, clearLibrary
+    }
+
+})();
+
 const bookTable = document.querySelector('table');
 const dialog = document.querySelector('dialog');
 const tableBody = document.querySelector('tbody');
@@ -35,7 +60,7 @@ function setTableHeader() {
 
 // Clear the library
 function clearLibrary() {
-    myLibrary = [];
+    myLibrary.clearLibrary();
     tableBody.innerHTML = "";
 }
 
@@ -82,7 +107,7 @@ function addBookToLibrary() {
             e.preventDefault();
             if (formValidation(e)) {
                 const newBook = new Book(allNameInput);
-                myLibrary.push(newBook);
+                myLibrary.addBook(newBook);
                 clearInputs();
                 displayBookRow();
         }
@@ -118,7 +143,7 @@ function formValidation() {
 // Display book properties on table
 function displayBookRow() {
     tableBody.innerHTML = "";
-    for(let [key,value] of Object.entries(myLibrary)) {
+    for(let [key,value] of Object.entries(myLibrary.getLibraryBooks())) {
         let bookRow = bookTable.insertRow();
         displayBookPropertyValues(value, bookRow);
         createReadButton(key,bookRow)
@@ -141,7 +166,7 @@ function createReadButton(key, row) {
     row.insertCell().appendChild(readButton);
     readButton.dataset.index = key;
     readButton.addEventListener('click', (e) => {
-        const currentBook = myLibrary[e.target.dataset.index]
+        const currentBook = myLibrary.getLibraryBooks()[e.target.dataset.index]
         currentBook.toggleRead();
         updateReadProperty(row, currentBook);
      });
@@ -167,7 +192,7 @@ function createRemoveButton(key, row) {
     removeButton.dataset.index = key;
     removeButton.addEventListener('click', (e)=> {
             const index = parseInt(e.target.dataset.index);
-            myLibrary.splice(index, 1)
+            myLibrary.removeBook(index)
             tableBody.removeChild(row)
     })
 }
