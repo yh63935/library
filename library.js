@@ -33,38 +33,45 @@ Book.prototype.toggleRead = function() {
     }
  };
  
-
+// Add book to the library after form validation
 function addBookToLibrary() {
     const submit = document.querySelector('input[type="submit"]');
-    const form = document.querySelector('form');
-    const errorMessage = Array.from(document.querySelectorAll('.error'))
 
     submit.addEventListener('click', (e)=> {
         e.preventDefault();
+            if (formValidation(e)) {
+                const newBook = new Book(allNameInput);
+                myLibrary.push(newBook);
+                clearInputs();
+                displayBookRow();
+        }
+    })
+}
+
+// Validate form and display error messages
+function formValidation() {
+
+    const form = document.querySelector('form');
+
         let validInput = true;
         if(!form.checkValidity()) {
             validInput = false;
         }
             for (let [key,input] of Object.entries(allNameInput)) {
                 errorMessage[key].innerText = input.validationMessage;
+                    
                 if (form.checkValidity()) {
                     if ((input.getAttribute('name') === 'author' || input.getAttribute('name') === 'title') && !isNaN(parseInt(input.value))) {
-                        errorMessage[key].innerText += 'Please enter a string'; 
+                            errorMessage[key].innerText+='Please enter a string';
                         validInput = false;   
                     }
                     if (input.value !=="" && input.getAttribute('name') === 'read' && input.value.toLowerCase()!=='yes' && input.value.toLowerCase()!=='no') {
-                        errorMessage[key].innerText = 'Please enter "yes" or "no"';
+                            errorMessage[key].innerText+='Please enter "yes" or "no"';
                         validInput = false;
                     }           
                 }
             }
-            if (validInput) {
-                const newBook = new Book(allNameInput);
-                myLibrary.push(newBook);
-                clearInputs();
-                displayBook();
-        }
-    })
+    return validInput;         
 }
 
 function setTableHeader() {
