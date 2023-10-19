@@ -23,7 +23,7 @@ function getBookProperties() {
 
 // Set the table header with form input names
 function setTableHeader() {
-    const tableHeader = document.querySelector('theader')
+    const tableHeader = document.querySelector('thead')
     const headerRow = document.createElement('tr');
     for(let name of getBookProperties()) {
         const headerEl = document.createElement('th');
