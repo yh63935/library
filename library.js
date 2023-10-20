@@ -126,17 +126,16 @@ function formValidation() {
     for (let [key,input] of Object.entries(allNameInput)) {
                 errorMessage[key].innerText = input.validationMessage;
                     
-                if (form.checkValidity()) {
-                        if ((input.getAttribute('name') === 'author' || input.getAttribute('name') === 'title') && !isNaN(parseInt(input.value))) {
-                            errorMessage[key].innerText+='Please enter a string';
-                            validInput = false;
-                        }
-                        if (input.value !=="" && input.getAttribute('name') === 'read' && input.value.toLowerCase()!=='yes' && input.value.toLowerCase()!=='no') {
-                            errorMessage[key].innerText+='Please enter "yes" or "no"';
-                            validInput = false;
-                        }           
-                    }
+                if ((input.getAttribute('name') === 'author' || input.getAttribute('name') === 'title') && !isNaN(parseInt(input.value))) {
+                    errorMessage[key].innerText+='Please enter a string';
+                    validInput = false;
                 }
+                if (input.value !=="" && input.getAttribute('name') === 'read' && input.value.toLowerCase()!=='yes' && input.value.toLowerCase()!=='no') {
+                    errorMessage[key].innerText+='Please enter "yes" or "no"';
+                    validInput = false;
+                }           
+            }
+
     return validInput;         
 }
 
